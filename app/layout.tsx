@@ -3,16 +3,17 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-inter',
   display: 'swap',
+  preload: true,
 })
 
 export const metadata: Metadata = {
-  title: 'AI Workflow Automation â€” Táº¡o HÃ ng Chá»¥c Video Má»—i NgÃ y Báº±ng AI',
-  description: 'Há»‡ thá»‘ng Workflow AI tá»± Ä‘á»™ng táº¡o ná»™i dung, hÃ¬nh áº£nh, giá»ng Ä‘á»c vÃ  video hoÃ n chá»‰nh chá»‰ trong vÃ i phÃºt. KhÃ´ng cáº§n quay video, khÃ´ng cáº§n thuÃª editor.',
-  keywords: 'AI workflow, automation, táº¡o video AI, content creator, affiliate marketing, digital marketing Vietnam',
+  title: 'AI Workflow Automation — Tạo Hàng Chục Video Mỗi Ngày Bằng AI',
+  description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút. Không cần quay video, không cần thuê editor.',
+  keywords: 'AI workflow, automation, tạo video AI, content creator, affiliate marketing, digital marketing Vietnam',
   authors: [{ name: 'AI Workflow Team' }],
   creator: 'AI Workflow',
   publisher: 'AI Workflow',
@@ -22,8 +23,8 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     url: 'https://ai-workflow-landing.vercel.app',
     siteName: 'AI Workflow',
-    title: 'AI Workflow â€” Biáº¿n 1 Ã TÆ°á»Ÿng ThÃ nh HÃ ng Chá»¥c Video Má»—i NgÃ y',
-    description: 'Há»‡ thá»‘ng Workflow AI tá»± Ä‘á»™ng táº¡o ná»™i dung, hÃ¬nh áº£nh, giá»ng Ä‘á»c vÃ  video hoÃ n chá»‰nh chá»‰ trong vÃ i phÃºt.',
+    title: 'AI Workflow — Biến 1 Ý Tưởng Thành Hàng Chục Video Mỗi Ngày',
+    description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút.',
     images: [
       {
         url: '/og-image.png',
@@ -35,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Workflow â€” Biáº¿n 1 Ã TÆ°á»Ÿng ThÃ nh HÃ ng Chá»¥c Video Má»—i NgÃ y',
-    description: 'Há»‡ thá»‘ng Workflow AI tá»± Ä‘á»™ng táº¡o ná»™i dung, hÃ¬nh áº£nh, giá»ng Ä‘á»c vÃ  video hoÃ n chá»‰nh chá»‰ trong vÃ i phÃºt.',
+    title: 'AI Workflow — Biến 1 Ý Tưởng Thành Hàng Chục Video Mỗi Ngày',
+    description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút.',
     images: ['/og-image.png'],
   },
   viewport: {
@@ -51,7 +52,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'AI Workflow Automation',
-  description: 'Há»‡ thá»‘ng Workflow AI tá»± Ä‘á»™ng táº¡o ná»™i dung, hÃ¬nh áº£nh, giá»ng Ä‘á»c vÃ  video hoÃ n chá»‰nh',
+  description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   offers: {
@@ -76,6 +77,8 @@ export default function RootLayout({
   return (
     <html lang="vi" className={inter.variable}>
       <head>
+        <meta charSet="utf-8" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="canonical" href="https://ai-workflow-landing.vercel.app" />
         <script
           type="application/ld+json"
