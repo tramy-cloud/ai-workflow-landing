@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1C2139;
+  --gold: #D4AF37;
+  --gold-soft: #E6C76A;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #1C2139;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1C2139;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #D4AF37, #E6C76A);
+  border-radius: 3px;
+}
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #D4AF37, #E6C76A, #D4AF37);
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
+
+/* Gold text gradient */
+.gold-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #E6C76A 50%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gold shimmer text */
+.gold-shimmer-text {
+  background: linear-gradient(90deg, #D4AF37, #E6C76A, #fff9e6, #E6C76A, #D4AF37);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card-gold {
+  background: rgba(212, 175, 55, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Gold border card */
+.gold-border-card {
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(145deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%);
+}
+
+/* Glow blob */
+.glow-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* Workflow connector line */
+.workflow-line {
+  position: relative;
+}
+.workflow-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -24px;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(to bottom, #D4AF37, transparent);
+}
+
+/* Accordion */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.accordion-content.open {
+  max-height: 300px;
+}
+
+/* Video player */
+.video-player {
+  position: relative;
+  background: rgba(0,0,0,0.6);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(212,175,55,0.2);
+}
+
+/* Carousel */
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Section fade-in */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.section-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delay { animation: float 8s ease-in-out infinite 2s; }
+
+/* Gold pulse */
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+  50% { box-shadow: 0 0 50px rgba(212,175,55,0.7), 0 0 80px rgba(212,175,55,0.3); }
+}
+.gold-pulse { animation: goldPulse 3s ease-in-out infinite; }
+
+/* Workflow node pulse */
+@keyframes nodePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+}
+
+/* Number counter */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pricing popular badge */
+.popular-badge {
+  background: linear-gradient(135deg, #D4AF37, #E6C76A);
+  color: #1C2139;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 16px;
+  border-radius: 100px;
+}
+
+/* Mobile sticky CTA */
+@media (max-width: 768px) {
+  .mobile-sticky-cta {
+    display: flex !important;
+  }
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stagger-children.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+.stagger-children.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.1s; }
+.stagger-children.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.3s; }
+.stagger-children.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.4s; }
+.stagger-children.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.5s; }
+.stagger-children.visible > *:nth-child(7) { opacity: 1; transform: none; transition-delay: 0.6s; }
