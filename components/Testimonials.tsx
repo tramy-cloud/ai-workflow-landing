@@ -1,157 +1,193 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react'
 
 const testimonials = [
   {
-    name: 'Nguyá»…n Minh Tuáº¥n',
-    business: 'TikTok Shop â€” Thá»i Trang',
-    result: 'TÄƒng 400% doanh thu trong 45 ngÃ y',
-    avatar: 'MT',
+    name: 'Trần Minh Khoa',
+    role: 'TikTok Creator',
+    avatar: 'MK',
+    avatarBg: '#3DA5FF',
+    stars: 5,
+    result: 'Tăng từ 0 lên 50 triệu/tháng',
+    text: 'Trước khi học tôi không biết AI là gì. Sau 8 tuần với khóa học này, tôi đã xây được hệ thống TikTok tự động tạo 5-10 video/ngày. Thu nhập tháng đầu tiên đã đạt 20 triệu!',
+  },
+  {
+    name: 'Nguyễn Thị Hương',
+    role: 'Affiliate Marketer',
+    avatar: 'NH',
     avatarBg: '#D4AF37',
-    review: 'TrÆ°á»›c Ä‘Ã¢y tÃ´i máº¥t 2 ngÃ y Ä‘á»ƒ lÃ m 1 video. Giá» vá»›i AI Workflow, tÃ´i lÃ m Ä‘Æ°á»£c 30-50 video má»—i ngÃ y. Doanh thu tá»« TikTok Shop cá»§a tÃ´i tÄƒng tá»« 20 triá»‡u lÃªn 80 triá»‡u/thÃ¡ng chá»‰ trong 45 ngÃ y!',
-    rating: 5,
-    platform: 'TikTok',
+    stars: 5,
+    result: 'Thu nhập passive income ổn định',
+    text: 'Hệ thống affiliate của tôi giờ chạy hoàn toàn tự động. Tôi chỉ cần check dashboard 30 phút mỗi ngày, còn lại AI lo hết. Tháng vừa rồi thu nhập đạt 35 triệu từ affiliate.',
   },
   {
-    name: 'Tráº§n Thu HÆ°Æ¡ng',
-    business: 'Affiliate Marketing â€” Sá»©c Khá»e',
-    result: 'Thu nháº­p passive $3,000/thÃ¡ng',
+    name: 'Lê Quang Vinh',
+    role: 'Agency Owner',
+    avatar: 'QV',
+    avatarBg: '#A98EFF',
+    stars: 5,
+    result: 'Scale agency từ 3 lên 15 khách hàng',
+    text: 'Nhờ n8n automation, agency của tôi giờ xử lý được gấp 5 lần lượng khách hàng với cùng số nhân viên. Chi phí vận hành giảm 40%, profit tăng 300%.',
+  },
+  {
+    name: 'Phạm Thu Hà',
+    role: 'Content Creator',
     avatar: 'TH',
-    avatarBg: '#9B8AC4',
-    review: 'AI Workflow giÃºp tÃ´i scale tá»« 1 channel lÃªn 5 channels cÃ¹ng lÃºc mÃ  khÃ´ng cáº§n thuÃª thÃªm nhÃ¢n viÃªn. Thu nháº­p affiliate cá»§a tÃ´i Ä‘Ã£ Ä‘áº¡t $3,000/thÃ¡ng sau 2 thÃ¡ng sá»­ dá»¥ng.',
-    rating: 5,
-    platform: 'YouTube',
+    avatarBg: '#55EFC4',
+    stars: 5,
+    result: 'Từ 2 đến 50 bài/tuần tự động',
+    text: 'Trước đây tôi mất cả ngày để viết 2-3 bài blog. Bây giờ với AI workflow, tôi tạo được 50+ bài/tuần mà chất lượng còn tốt hơn. Đây là bước ngoặt lớn nhất trong sự nghiệp của tôi.',
   },
   {
-    name: 'LÃª VÄƒn Nam',
-    business: 'BÄS â€” Dá»± Ãn Cao Cáº¥p',
-    result: 'Tiáº¿t kiá»‡m 150 triá»‡u chi phÃ­ sáº£n xuáº¥t',
-    avatar: 'LN',
-    avatarBg: '#4FC3F7',
-    review: 'TrÆ°á»›c tÃ´i thuÃª agency sáº£n xuáº¥t video BÄS tá»‘n 15-20 triá»‡u/video. Vá»›i AI Workflow, tÃ´i tá»± táº¡o video chuyÃªn nghiá»‡p vá»›i chi phÃ­ gáº§n nhÆ° báº±ng 0. Tiáº¿t kiá»‡m Ä‘Æ°á»£c hÆ¡n 150 triá»‡u trong 6 thÃ¡ng.',
-    rating: 5,
-    platform: 'Facebook',
+    name: 'Đỗ Văn Nam',
+    role: 'YouTube Creator',
+    avatar: 'VN',
+    avatarBg: '#FF6B6B',
+    stars: 5,
+    result: 'Kênh faceless đạt 100K subscribers',
+    text: 'Kênh YouTube faceless của tôi đạt 100K sub sau 6 tháng với quy trình hoàn toàn tự động. Không cần lộ mặt, không cần quay video. AI làm tất cả.',
   },
   {
-    name: 'Pháº¡m Thá»‹ Lan',
-    business: 'Content Creator â€” áº¨m Thá»±c',
-    result: 'KÃªnh YouTube 200K subscribers trong 3 thÃ¡ng',
-    avatar: 'PL',
-    avatarBg: '#FF8A65',
-    review: 'TÃ´i lÃ  content creator nghiá»‡p dÆ°, khÃ´ng biáº¿t edit video. AI Workflow giÃºp tÃ´i táº¡o ra nhá»¯ng video áº©m thá»±c chuyÃªn nghiá»‡p. KÃªnh YouTube cá»§a tÃ´i tÄƒng tá»« 0 lÃªn 200K subscribers trong 3 thÃ¡ng!',
-    rating: 5,
-    platform: 'YouTube',
-  },
-  {
-    name: 'HoÃ ng Äá»©c Thá»‹nh',
-    business: 'Digital Marketing Agency',
-    result: 'Phá»¥c vá»¥ 20 khÃ¡ch hÃ ng thay vÃ¬ 5',
-    avatar: 'HT',
-    avatarBg: '#81C784',
-    review: 'Agency cá»§a tÃ´i cÃ³ thá»ƒ phá»¥c vá»¥ gáº¥p 4 láº§n sá»‘ khÃ¡ch hÃ ng vá»›i cÃ¹ng Ä‘á»™i ngÅ© nhá» AI Workflow. ChÃºng tÃ´i Ä‘Ã£ tiáº¿t kiá»‡m 80% thá»i gian sáº£n xuáº¥t ná»™i dung vÃ  tÄƒng margin lá»£i nhuáº­n lÃªn 300%.',
-    rating: 5,
-    platform: 'Multi-platform',
+    name: 'Hoàng Thị Lan',
+    role: 'E-commerce Owner',
+    avatar: 'HL',
+    avatarBg: '#FDCB6E',
+    stars: 5,
+    result: 'Tiết kiệm 60% chi phí marketing',
+    text: 'Tôi dùng AI workflow để tự động hóa toàn bộ marketing cho shop online. Từ content đến ads đến chăm sóc khách hàng — tất cả đều tự động. Chi phí marketing giảm 60%.',
   },
 ]
 
 export default function Testimonials() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState(0)
+  const [autoPlay, setAutoPlay] = useState(true)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % testimonials.length)
-    }, 5000)
-    return () => clearInterval(timer)
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true) }, { threshold: 0.1 })
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
   }, [])
 
-  const prev = () => setCurrent(p => (p - 1 + testimonials.length) % testimonials.length)
-  const next = () => setCurrent(p => (p + 1) % testimonials.length)
+  useEffect(() => {
+    if (!autoPlay) return
+    const t = setInterval(() => {
+      setCurrent((c) => (c + 1) % testimonials.length)
+    }, 5000)
+    return () => clearInterval(t)
+  }, [autoPlay])
 
-  const t = testimonials[current]
+  const prev = () => { setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length); setAutoPlay(false) }
+  const next = () => { setCurrent((c) => (c + 1) % testimonials.length); setAutoPlay(false) }
+
+  const visibleCards = [
+    testimonials[current],
+    testimonials[(current + 1) % testimonials.length],
+    testimonials[(current + 2) % testimonials.length],
+  ]
 
   return (
-    <section id="testimonials" className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #1C2139 0%, #1a1f38 100%)' }}>
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.06) 0%, transparent 60%)',
-      }} />
+    <section
+      id="testimonials"
+      ref={ref}
+      className="relative py-24 overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #0A1022 0%, #0D1630 60%, #0A1022 100%)' }}
+    >
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(61,165,255,0.04) 0%, transparent 65%)' }}
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={visible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card-gold mb-6">
-            <Star className="w-4 h-4 text-gold" fill="currentColor" />
-            <span className="text-gold text-sm font-semibold">KhÃ¡ch HÃ ng NÃ³i GÃ¬</span>
+          <div className="section-label mx-auto mb-4">
+            <span>💬</span> Đánh Giá
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 leading-tight">
-            Káº¿t Quáº£ Thá»±c Tá»«{' '}
-            <span className="gold-text">KhÃ¡ch HÃ ng Thá»±c</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+            Học Viên <span className="hero-gradient-text">Nói Gì</span>
           </h2>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="flex text-yellow-400 text-xl">★★★★★</div>
+            <span className="text-white font-bold">4.9/5.0</span>
+            <span className="text-text-secondary text-sm">từ 1,000+ đánh giá</span>
+          </div>
         </motion.div>
 
-        {/* Main testimonial */}
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative gold-border-card rounded-3xl p-8 lg:p-12 mb-8"
-          >
-            {/* Quote icon */}
-            <Quote className="absolute top-8 right-8 w-12 h-12 text-gold/10" />
-
-            {/* Stars */}
-            <div className="flex gap-1 mb-6">
-              {Array.from({ length: t.rating }).map((_, i) => (
-                <Star key={i} className="w-5 h-5 text-gold" fill="currentColor" />
-              ))}
-            </div>
-
-            {/* Review text */}
-            <blockquote className="text-white/85 text-lg lg:text-xl leading-relaxed mb-8 font-light italic">
-              &ldquo;{t.review}&rdquo;
-            </blockquote>
-
-            {/* Author */}
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-primary font-black text-lg flex-shrink-0"
-                  style={{ background: `linear-gradient(135deg, ${t.avatarBg}, ${t.avatarBg}80)` }}
+        {/* Carousel — desktop 3 cols, mobile 1 col */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={visible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative"
+        >
+          {/* Cards row */}
+          <div className="grid md:grid-cols-3 gap-5 mb-8">
+            <AnimatePresence mode="wait">
+              {visibleCards.map((t, i) => (
+                <motion.div
+                  key={`${t.name}-${current}-${i}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className={`glass-card rounded-[20px] p-6 relative transition-all duration-300 ${
+                    i === 0 ? 'md:scale-105 card-glow' : 'opacity-85'
+                  }`}
+                  style={{ border: `1px solid ${i === 0 ? 'rgba(61,165,255,0.3)' : 'rgba(36,68,122,0.5)'}` }}
                 >
-                  {t.avatar}
-                </div>
-                <div>
-                  <div className="text-white font-bold text-base">{t.name}</div>
-                  <div className="text-white/60 text-sm">{t.business}</div>
-                </div>
-              </div>
-              <div className="glass-card-gold px-4 py-2 rounded-xl">
-                <div className="text-gold font-bold text-sm">âœ“ {t.result}</div>
-                <div className="text-white/50 text-xs">via {t.platform}</div>
-              </div>
-            </div>
-          </motion.div>
+                  {/* Quote icon */}
+                  <Quote className="w-6 h-6 text-accent-blue/30 absolute top-5 right-5" />
+
+                  {/* Stars */}
+                  <div className="flex text-yellow-400 text-sm gap-0.5 mb-4">
+                    {Array.from({ length: t.stars }).map((_, si) => <Star key={si} className="w-4 h-4 fill-yellow-400" />)}
+                  </div>
+
+                  {/* Result badge */}
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-xs font-semibold"
+                    style={{ background: 'rgba(61,165,255,0.12)', color: '#3DA5FF', border: '1px solid rgba(61,165,255,0.2)' }}>
+                    ✓ {t.result}
+                  </div>
+
+                  {/* Text */}
+                  <p className="text-text-secondary text-sm leading-relaxed mb-5 italic">&ldquo;{t.text}&rdquo;</p>
+
+                  {/* Avatar + name */}
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-extrabold text-white flex-shrink-0"
+                      style={{ background: t.avatarBg }}
+                    >
+                      {t.avatar}
+                    </div>
+                    <div>
+                      <div className="text-white font-bold text-sm">{t.name}</div>
+                      <div className="text-text-secondary text-xs">{t.role}</div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-4">
             <button
+              id="testimonial-prev"
               onClick={prev}
-              className="w-10 h-10 rounded-full glass-card border border-white/10 flex items-center justify-center hover:border-gold/30 hover:text-gold transition-all"
+              className="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:border-accent-blue/40 transition-all duration-200"
+              aria-label="Previous testimonial"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5 text-text-secondary" />
             </button>
 
             {/* Dots */}
@@ -159,48 +195,28 @@ export default function Testimonials() {
               {testimonials.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCurrent(i)}
+                  onClick={() => { setCurrent(i); setAutoPlay(false) }}
                   className="rounded-full transition-all duration-300"
                   style={{
                     width: i === current ? '24px' : '8px',
                     height: '8px',
-                    background: i === current ? '#D4AF37' : 'rgba(255,255,255,0.2)',
+                    background: i === current ? '#3DA5FF' : 'rgba(255,255,255,0.2)',
                   }}
+                  aria-label={`Go to testimonial ${i + 1}`}
                 />
               ))}
             </div>
 
             <button
+              id="testimonial-next"
               onClick={next}
-              className="w-10 h-10 rounded-full glass-card border border-white/10 flex items-center justify-center hover:border-gold/30 hover:text-gold transition-all"
+              className="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:border-accent-blue/40 transition-all duration-200"
+              aria-label="Next testimonial"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5 text-text-secondary" />
             </button>
           </div>
-
-          {/* Mini testimonial strip */}
-          <div className="mt-10 grid grid-cols-5 gap-3">
-            {testimonials.map((test, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-2 ${
-                  i === current ? 'glass-card-gold scale-105' : 'glass-card opacity-50 hover:opacity-80'
-                }`}
-              >
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-primary text-xs font-black"
-                  style={{ background: test.avatarBg }}
-                >
-                  {test.avatar}
-                </div>
-                <span className="text-[10px] text-white/70 text-center hidden sm:block leading-tight">
-                  {test.name.split(' ').slice(-1)}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
