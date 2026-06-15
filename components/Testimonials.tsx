@@ -121,7 +121,7 @@ export default function Testimonials() {
 
             {/* Review text */}
             <blockquote className="text-white/85 text-lg lg:text-xl leading-relaxed mb-8 font-light italic">
-              "{t.review}"
+              &ldquo;{t.review}&rdquo;
             </blockquote>
 
             {/* Author */}
