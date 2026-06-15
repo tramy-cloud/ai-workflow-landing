@@ -1,121 +1,149 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Clock, Brain, DollarSign, Calendar } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Clock, Brain, DollarSign, GitBranch, TrendingDown, Users } from 'lucide-react'
 
-const problems = [
+const painPoints = [
   {
     icon: Clock,
-    title: 'Máº¥t nhiá»u giá» dá»±ng video',
-    desc: 'Má»—i video tá»‘n 3â€“8 giá» Ä‘á»ƒ quay, edit, render. KhÃ´ng Ä‘á»§ thá»i gian lÃ m nhiá»u ná»™i dung.',
+    title: 'Mất nhiều giờ tạo nội dung',
+    desc: 'Mỗi video mất 4-8 giờ để lên ý tưởng, viết kịch bản, quay và edit thủ công.',
     color: '#FF6B6B',
   },
   {
     icon: Brain,
-    title: 'Thiáº¿u Ã½ tÆ°á»Ÿng liÃªn tá»¥c',
-    desc: 'Má»—i ngÃ y pháº£i nghÄ© ra ná»™i dung má»›i. Bá»‹ "writer\'s block" lÃ m cháº­m tiáº¿n Ä‘á»™ Ä‘Äƒng bÃ i.',
-    color: '#9B8AC4',
+    title: 'Không biết tận dụng AI',
+    desc: 'Biết AI tồn tại nhưng không biết cách kết nối các công cụ để tạo thành quy trình hiệu quả.',
+    color: '#FF9F43',
   },
   {
     icon: DollarSign,
-    title: 'Chi phÃ­ thuÃª nhÃ¢n sá»± cao',
-    desc: 'Editor, copywriter, designer... tá»‘n hÃ ng chá»¥c triá»‡u má»—i thÃ¡ng mÃ  cháº¥t lÆ°á»£ng khÃ´ng Ä‘á»“ng Ä‘á»u.',
-    color: '#FF8A65',
+    title: 'Tốn chi phí nhân sự',
+    desc: 'Phải thuê editor, copywriter, designer tốn hàng chục triệu mỗi tháng mà kết quả không ổn định.',
+    color: '#FFC312',
   },
   {
-    icon: Calendar,
-    title: 'KhÃ´ng Ä‘Äƒng Ä‘á»u ná»™i dung',
-    desc: 'Lá»‹ch Ä‘Äƒng bÃ i tháº¥t thÆ°á»ng, thuáº­t toÃ¡n pháº¡t, tÃ i khoáº£n giáº£m reach, doanh thu sá»¥t giáº£m.',
-    color: '#4FC3F7',
+    icon: GitBranch,
+    title: 'Không có hệ thống tự động',
+    desc: 'Mọi việc đều phụ thuộc vào bạn. Ngừng làm là ngừng thu nhập.',
+    color: '#A29BFE',
+  },
+  {
+    icon: TrendingDown,
+    title: 'Khó mở rộng công việc',
+    desc: 'Muốn scale nhưng không biết bắt đầu từ đâu và sợ mắc sai lầm tốn kém.',
+    color: '#74B9FF',
+  },
+  {
+    icon: Users,
+    title: 'Phụ thuộc vào người khác',
+    desc: 'Mỗi khi freelancer hay nhân viên nghỉ là toàn bộ hệ thống bị ảnh hưởng.',
+    color: '#55EFC4',
   },
 ]
 
 export default function Problem() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true) },
+      { threshold: 0.1 }
+    )
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
 
   return (
-    <section id="problem" className="py-24 lg:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02]"
+    <section
+      id="problem"
+      ref={ref}
+      className="relative py-24 overflow-hidden"
+      style={{ background: '#0A1022' }}
+    >
+      {/* Background accent */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(255,107,107,0.5) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(255,107,107,0.04) 0%, transparent 60%)',
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={visible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-red-500/20 mb-6">
-            <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-            <span className="text-red-400 text-sm font-semibold">Váº¥n Äá» Phá»• Biáº¿n</span>
+          <div className="section-label mx-auto mb-4">
+            <span>⚠️</span> Vấn Đề Phổ Biến
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 leading-tight">
-            Táº¡i Sao Äa Sá»‘ NgÆ°á»i LÃ m Ná»™i Dung{' '}
-            <span className="text-red-400">Äá»u Bá»‹ QuÃ¡ Táº£i?</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight">
+            Bạn Đang Mắc Kẹt Trong{' '}
+            <span className="text-[#FF6B6B]">Vòng Lặp</span>{' '}
+            Làm Việc Thủ Công?
           </h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Báº¡n khÃ´ng Ä‘Æ¡n Ä‘á»™c. ÄÃ¢y lÃ  nhá»¯ng váº¥n Ä‘á» mÃ  95% content creator gáº·p pháº£i má»—i ngÃ y.
+          <p className="mt-4 text-text-secondary text-base sm:text-lg max-w-2xl mx-auto">
+            Đây là những vấn đề mà 90% người làm nội dung và kinh doanh online đang gặp phải mỗi ngày.
           </p>
         </motion.div>
 
         {/* Pain Point Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {problems.map((p, i) => {
-            const Icon = p.icon
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children" data-visible={visible}>
+          {painPoints.map((point, i) => {
+            const Icon = point.icon
             return (
               <motion.div
-                key={p.title}
-                initial={{ opacity: 0, y: 40 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                key={point.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={visible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="glass-card rounded-2xl p-7 group hover:scale-[1.03] transition-all duration-300 relative overflow-hidden"
-                style={{ border: `1px solid ${p.color}20` }}
+                className="group glass-card rounded-[20px] p-6 sm:p-7 transition-all duration-300 hover:scale-[1.02] cursor-default"
+                style={{
+                  border: `1px solid ${point.color}20`,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = `${point.color}40`
+                  ;(e.currentTarget as HTMLElement).style.boxShadow = `0 0 30px ${point.color}15`
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = `${point.color}20`
+                  ;(e.currentTarget as HTMLElement).style.boxShadow = ''
+                }}
               >
-                {/* Background glow */}
                 <div
-                  className="absolute top-0 right-0 w-24 h-24 rounded-full opacity-10 group-hover:opacity-20 transition-opacity"
-                  style={{ background: `radial-gradient(circle, ${p.color}, transparent)`, transform: 'translate(30%, -30%)' }}
-                />
-
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform"
-                  style={{ background: `${p.color}18` }}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                  style={{ background: `${point.color}18` }}
                 >
-                  <Icon className="w-7 h-7" style={{ color: p.color }} />
+                  <Icon className="w-6 h-6" style={{ color: point.color }} />
                 </div>
-
-                <h3 className="text-white font-bold text-base mb-3 leading-snug">{p.title}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{p.desc}</p>
+                <h3 className="text-base font-bold text-white mb-2">{point.title}</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">{point.desc}</p>
 
                 {/* Decorative corner */}
                 <div
-                  className="absolute bottom-4 right-4 text-3xl opacity-10 font-black"
-                  style={{ color: p.color }}
-                >
-                  âœ•
-                </div>
+                  className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-60"
+                  style={{ background: point.color }}
+                />
               </motion.div>
             )
           })}
         </div>
 
-        {/* Bottom callout */}
+        {/* Bridge to solution */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          className="mt-12 text-center"
+          animate={visible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.7 }}
+          className="text-center mt-12"
         >
-          <p className="text-white/50 text-base">
-            Tin vui lÃ  â€” <span className="text-gold font-semibold">táº¥t cáº£ nhá»¯ng váº¥n Ä‘á» nÃ y Ä‘á»u cÃ³ thá»ƒ giáº£i quyáº¿t</span> báº±ng AI Workflow.
+          <p className="text-lg text-white/70">
+            Nếu bạn nhận ra mình trong ít nhất <span className="text-white font-bold">1 vấn đề trên</span>,{' '}
+            khóa học này chính là giải pháp bạn cần. 👇
           </p>
         </motion.div>
       </div>
