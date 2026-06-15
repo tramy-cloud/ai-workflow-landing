@@ -4,40 +4,40 @@ import './globals.css'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
   display: 'swap',
   preload: true,
 })
 
 export const metadata: Metadata = {
-  title: 'AI Workflow Automation — Tạo Hàng Chục Video Mỗi Ngày Bằng AI',
-  description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút. Không cần quay video, không cần thuê editor.',
-  keywords: 'AI workflow, automation, tạo video AI, content creator, affiliate marketing, digital marketing Vietnam',
-  authors: [{ name: 'AI Workflow Team' }],
-  creator: 'AI Workflow',
-  publisher: 'AI Workflow',
+  title: 'AI Workflow Masterclass — Làm Chủ AI, Tự Động Hóa & Tạo Thu Nhập',
+  description: 'Khóa học thực chiến giúp bạn xây dựng hệ thống AI tự động tạo nội dung, hình ảnh, giọng đọc, video và quy trình kinh doanh. Không cần biết lập trình.',
+  keywords: 'AI workflow, automation, khóa học AI, tự động hóa, content creator, affiliate marketing, n8n, AI video, Vietnam',
+  authors: [{ name: 'AI Workflow Masterclass' }],
+  creator: 'AI Workflow Masterclass',
+  publisher: 'AI Workflow Masterclass',
   robots: 'index, follow',
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    url: 'https://ai-workflow-landing.vercel.app',
-    siteName: 'AI Workflow',
-    title: 'AI Workflow — Biến 1 Ý Tưởng Thành Hàng Chục Video Mỗi Ngày',
-    description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút.',
+    url: 'https://ai-workflow-masterclass.com',
+    siteName: 'AI Workflow Masterclass',
+    title: 'AI Workflow Masterclass — Làm Chủ AI & Tạo Thu Nhập Với AI',
+    description: 'Khóa học thực chiến giúp bạn xây dựng hệ thống AI tự động tạo nội dung, hình ảnh, giọng đọc và video. Không cần biết lập trình.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AI Workflow Automation',
+        alt: 'AI Workflow Masterclass',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Workflow — Biến 1 Ý Tưởng Thành Hàng Chục Video Mỗi Ngày',
-    description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh chỉ trong vài phút.',
+    title: 'AI Workflow Masterclass — Làm Chủ AI & Tạo Thu Nhập Với AI',
+    description: 'Khóa học thực chiến giúp bạn xây dựng hệ thống AI tự động hóa công việc và tạo thu nhập.',
     images: ['/og-image.png'],
   },
   viewport: {
@@ -45,27 +45,35 @@ export const metadata: Metadata = {
     initialScale: 1,
     maximumScale: 5,
   },
-  themeColor: '#1C2139',
+  themeColor: '#0A1022',
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'AI Workflow Automation',
-  description: 'Hệ thống Workflow AI tự động tạo nội dung, hình ảnh, giọng đọc và video hoàn chỉnh',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
+  '@type': 'Course',
+  name: 'AI Workflow Masterclass',
+  description: 'Khóa học thực chiến xây dựng hệ thống AI tự động hóa công việc và tạo thu nhập bằng AI',
+  provider: {
+    '@type': 'Organization',
+    name: 'AI Workflow Masterclass',
+    sameAs: 'https://ai-workflow-masterclass.com',
+  },
   offers: {
-    '@type': 'AggregateOffer',
+    '@type': 'Offer',
     priceCurrency: 'VND',
-    offerCount: 3,
+    availability: 'https://schema.org/InStock',
   },
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '4.9',
-    reviewCount: '500',
+    reviewCount: '1000',
     bestRating: '5',
     worstRating: '1',
+  },
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'online',
+    courseWorkload: 'PT40H',
   },
 }
 
@@ -78,14 +86,13 @@ export default function RootLayout({
     <html lang="vi" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
-        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="canonical" href="https://ai-workflow-landing.vercel.app" />
+        <link rel="canonical" href="https://ai-workflow-masterclass.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.className} bg-primary text-white antialiased`}>
+      <body className={`${inter.className} bg-bg-primary text-white antialiased`}>
         {children}
       </body>
     </html>
