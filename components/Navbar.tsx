@@ -1,45 +1,43 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Zap } from 'lucide-react'
 
 const navLinks = [
-  { href: '#problem', label: 'Váº¥n Äá»' },
-  { href: '#solution', label: 'Giáº£i PhÃ¡p' },
-  { href: '#features', label: 'TÃ­nh NÄƒng' },
-  { href: '#results', label: 'Káº¿t Quáº£' },
-  { href: '#pricing', label: 'Báº£ng GiÃ¡' },
-  { href: '#faq', label: 'FAQ' },
+  { label: 'Giới Thiệu', href: '#hero' },
+  { label: 'Lộ Trình', href: '#curriculum' },
+  { label: 'Workflow', href: '#workflow' },
+  { label: 'Học Viên', href: '#testimonials' },
+  { label: 'Học Phí', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
 ]
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = (scrollTop / docHeight) * 100
-      setScrollProgress(progress)
-      setScrolled(scrollTop > 20)
+      setScrolled(scrollTop > 50)
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleNavClick = (href: string) => {
-    setIsOpen(false)
+  const scrollTo = (href: string) => {
+    setMobileOpen(false)
     const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
     <>
-      {/* Scroll Progress Bar */}
+      {/* Scroll Progress */}
       <div
         id="scroll-progress"
         style={{ width: `${scrollProgress}%` }}
@@ -48,79 +46,105 @@ export default function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#1C2139]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl'
+            ? 'bg-bg-primary/90 backdrop-blur-xl border-b border-card-border/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
             : 'bg-transparent'
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold to-gold-soft flex items-center justify-center gold-pulse">
-                <Zap className="w-5 h-5 text-primary" fill="currentColor" />
-              </div>
-              <div>
-                <span className="text-white font-bold text-lg leading-none">AI</span>
-                <span className="gold-text font-bold text-lg leading-none ml-1">Workflow</span>
-              </div>
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
+          {/* Logo */}
+          <motion.a
+            href="#hero"
+            onClick={(e) => { e.preventDefault(); scrollTo('#hero') }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2.5 group cursor-pointer"
+          >
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-blue to-accent-cyan flex items-center justify-center shadow-blue group-hover:scale-110 transition-transform duration-300">
+              <Zap className="w-5 h-5 text-white" fill="white" />
             </div>
+            <div>
+              <span className="text-white font-bold text-base leading-none block">AI Workflow</span>
+              <span className="text-xs text-text-secondary leading-none">Masterclass</span>
+            </div>
+          </motion.a>
 
-            {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="px-4 py-2 text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 font-medium"
+          {/* Desktop Nav */}
+          <motion.ul
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="hidden lg:flex items-center gap-1"
+          >
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={(e) => { e.preventDefault(); scrollTo(link.href) }}
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-text-secondary hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
                 >
                   {link.label}
-                </button>
-              ))}
-            </div>
+                </a>
+              </li>
+            ))}
+          </motion.ul>
 
-            {/* CTA */}
-            <div className="hidden lg:flex items-center gap-3">
-              <button
-                onClick={() => handleNavClick('#contact')}
-                className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-gold to-gold-soft text-primary hover:shadow-gold hover:scale-105 transition-all duration-300"
-              >
-                Nháº­n Demo Ngay
-              </button>
-            </div>
-
-            {/* Mobile hamburger */}
+          {/* Desktop CTA */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="hidden lg:flex items-center gap-3"
+          >
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 text-white/80 hover:text-white transition-colors"
-              aria-label="Toggle menu"
+              id="nav-cta"
+              onClick={() => scrollTo('#pricing')}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-blue to-accent-cyan text-white font-semibold text-sm hover:shadow-blue hover:scale-105 transition-all duration-300"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              Đăng Ký Ngay
             </button>
-          </div>
+          </motion.div>
+
+          {/* Mobile Menu Button */}
+          <button
+            id="mobile-menu-btn"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden p-2 rounded-xl glass-card text-white"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </nav>
 
         {/* Mobile Menu */}
-        <div className={`lg:hidden transition-all duration-400 overflow-hidden ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="bg-[#1C2139]/98 backdrop-blur-xl border-t border-white/5 px-4 pb-6 pt-4">
-            <div className="flex flex-col gap-1 mb-4">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-left px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 font-medium text-sm"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => handleNavClick('#contact')}
-              className="w-full py-3.5 text-sm font-bold rounded-xl bg-gradient-to-r from-gold to-gold-soft text-primary"
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden border-t border-card-border/30 bg-bg-secondary/95 backdrop-blur-xl"
             >
-              Nháº­n Demo Ngay
-            </button>
-          </div>
-        </div>
+              <div className="px-4 py-4 flex flex-col gap-1">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={(e) => { e.preventDefault(); scrollTo(link.href) }}
+                    className="px-4 py-3 rounded-xl text-sm font-medium text-text-secondary hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <button
+                  onClick={() => scrollTo('#pricing')}
+                  className="mt-3 px-5 py-3 rounded-xl bg-gradient-to-r from-accent-blue to-accent-cyan text-white font-semibold text-sm"
+                >
+                  Đăng Ký Ngay
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </>
   )
