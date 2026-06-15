@@ -1,143 +1,171 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
-    q: 'AI Workflow lÃ  gÃ¬ vÃ  hoáº¡t Ä‘á»™ng nhÆ° tháº¿ nÃ o?',
-    a: 'AI Workflow lÃ  há»‡ thá»‘ng tá»± Ä‘á»™ng hÃ³a sáº£n xuáº¥t ná»™i dung video sá»­ dá»¥ng trÃ­ tuá»‡ nhÃ¢n táº¡o. Báº¡n chá»‰ cáº§n nháº­p 1 Ã½ tÆ°á»Ÿng hoáº·c tá»« khÃ³a, há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng nghiÃªn cá»©u, viáº¿t ká»‹ch báº£n, táº¡o hÃ¬nh áº£nh, giá»ng Ä‘á»c vÃ  render video hoÃ n chá»‰nh trong vÃ i phÃºt.',
+    q: 'Khóa học này phù hợp với ai?',
+    a: 'Khóa học phù hợp với tất cả mọi người — từ người mới hoàn toàn không biết AI cho đến người đã có kinh nghiệm muốn nâng cao. Chúng tôi thiết kế nội dung theo từng cấp độ để ai cũng có thể theo kịp.',
   },
   {
-    q: 'TÃ´i khÃ´ng biáº¿t cÃ´ng nghá»‡, cÃ³ dÃ¹ng Ä‘Æ°á»£c khÃ´ng?',
-    a: 'HoÃ n toÃ n cÃ³! AI Workflow Ä‘Æ°á»£c thiáº¿t káº¿ cho ngÆ°á»i khÃ´ng cÃ³ ká»¹ nÄƒng ká»¹ thuáº­t. Giao diá»‡n kÃ©o-tháº£ Ä‘Æ¡n giáº£n, cÃ³ video hÆ°á»›ng dáº«n tá»«ng bÆ°á»›c vÃ  Ä‘á»™i ngÅ© há»— trá»£ 24/7 qua Zalo.',
+    q: 'Tôi không biết lập trình có học được không?',
+    a: 'Hoàn toàn có thể! Đây là điểm mạnh nhất của khóa học. Chúng tôi sử dụng các công cụ No-Code như n8n, drag-and-drop workflow. Bạn không cần viết một dòng code nào cả.',
   },
   {
-    q: 'Má»™t ngÃ y tÃ´i cÃ³ thá»ƒ táº¡o Ä‘Æ°á»£c bao nhiÃªu video?',
-    a: 'TÃ¹y gÃ³i: Standard 20 video/ngÃ y, Pro 100 video/ngÃ y, Custom khÃ´ng giá»›i háº¡n. Má»™t khÃ¡ch hÃ ng cá»§a chÃºng tÃ´i Ä‘Ã£ táº¡o 200 video trong 1 ngÃ y Ä‘á»ƒ chuáº©n bá»‹ ná»™i dung cho cáº£ thÃ¡ng!',
+    q: 'Mất bao lâu để thấy kết quả?',
+    a: 'Nhiều học viên bắt đầu thấy kết quả ngay từ tuần đầu tiên khi áp dụng các workflow cơ bản. Sau 4-8 tuần học đầy đủ, bạn sẽ có một hệ thống tự động hoàn chỉnh đang hoạt động.',
   },
   {
-    q: 'Video cháº¥t lÆ°á»£ng cÃ³ cao khÃ´ng? TikTok/YouTube cÃ³ cháº¥p nháº­n khÃ´ng?',
-    a: 'Video xuáº¥t ra Ä‘áº¡t chuáº©n HD 1080p (Pro: 4K). ÄÃ£ Ä‘Æ°á»£c kiá»ƒm chá»©ng Ä‘Äƒng thÃ nh cÃ´ng trÃªn TikTok, YouTube, Facebook, Instagram. Nhiá»u khÃ¡ch hÃ ng Ä‘áº¡t triá»‡u view tá»« video AI cá»§a chÃºng tÃ´i.',
+    q: 'Chi phí công cụ AI có đắt không?',
+    a: 'Chúng tôi dạy cả công cụ miễn phí và trả phí. Bạn có thể bắt đầu với ngân sách 0đ và dần dần đầu tư khi thu nhập tăng lên. Nhiều workflow trong khóa học chạy hoàn toàn miễn phí.',
   },
   {
-    q: 'TÃ´i cÃ³ thá»ƒ dÃ¹ng AI Workflow cho nhiá»u lÄ©nh vá»±c khÃ¡c nhau khÃ´ng?',
-    a: 'CÃ³! Há»‡ thá»‘ng cÃ³ 380+ templates cho 7 lÄ©nh vá»±c: Thá»i trang, Affiliate, BÄS, áº¨m thá»±c, Du lá»‹ch, Tin tá»©c, GiÃ¡o dá»¥c. Báº¡n cÃ³ thá»ƒ dÃ¹ng cho nhiá»u lÄ©nh vá»±c cÃ¹ng lÃºc.',
+    q: 'Tôi có thể học theo tốc độ của riêng mình không?',
+    a: 'Có, bạn hoàn toàn chủ động thời gian học. Toàn bộ video bài giảng được lưu trên hệ thống, có thể xem đi xem lại bất cứ lúc nào. Không có deadline hay lịch học cố định.',
   },
   {
-    q: 'Giá»ng Ä‘á»c AI cÃ³ tá»± nhiÃªn khÃ´ng? CÃ³ giá»ng tiáº¿ng Viá»‡t khÃ´ng?',
-    a: 'Há»‡ thá»‘ng tÃ­ch há»£p ElevenLabs vá»›i 50+ giá»ng Ä‘á»c tiáº¿ng Viá»‡t tá»± nhiÃªn, bao gá»“m giá»ng Nam, giá»ng Ná»¯, giá»ng tráº» em, phong cÃ¡ch tin tá»©c, friendly... Háº§u háº¿t ngÆ°á»i xem khÃ´ng nháº­n ra Ä‘Ã¢y lÃ  AI.',
+    q: 'Sau khóa học có được hỗ trợ tiếp không?',
+    a: 'Có! Bạn sẽ được tham gia cộng đồng Private VIP với giảng viên và hàng ngàn thành viên. Chúng tôi hỗ trợ qua group chat, hỏi đáp trực tiếp và live session hàng tháng.',
   },
   {
-    q: 'TÃ´i cÃ³ thá»ƒ tÃ¹y chá»‰nh workflow theo yÃªu cáº§u riÃªng khÃ´ng?',
-    a: 'GÃ³i Pro cÃ³ thá»ƒ chá»‰nh sá»­a cÃ¡c template cÃ³ sáºµn. GÃ³i Custom cho phÃ©p xÃ¢y dá»±ng workflow hoÃ n toÃ n má»›i theo yÃªu cáº§u riÃªng cá»§a báº¡n, ká»ƒ cáº£ tÃ­ch há»£p vá»›i há»‡ thá»‘ng hiá»‡n cÃ³.',
+    q: 'n8n là gì? Khó dùng không?',
+    a: 'n8n là công cụ automation No-Code mạnh mẽ nhất hiện nay — tương tự Zapier nhưng mạnh hơn nhiều và có thể tự host. Trong khóa học chúng tôi hướng dẫn từ cài đặt đến xây workflow phức tạp theo từng bước.',
   },
   {
-    q: 'Thá»i gian onboarding vÃ  há»c máº¥t bao lÃ¢u?',
-    a: 'Pháº§n lá»›n khÃ¡ch hÃ ng táº¡o Ä‘Æ°á»£c video Ä‘áº§u tiÃªn trong 30 phÃºt sau khi Ä‘Äƒng kÃ½. CÃ³ video tutorial Ä‘áº§y Ä‘á»§, tÃ i liá»‡u hÆ°á»›ng dáº«n, vÃ  session 1-on-1 vá»›i gÃ³i Pro Ä‘á»ƒ Ä‘áº£m báº£o báº¡n dÃ¹ng hiá»‡u quáº£ ngay.',
+    q: 'Tôi có nhận được chứng chỉ hoàn thành không?',
+    a: 'Có, sau khi hoàn thành toàn bộ khóa học bạn sẽ nhận được chứng chỉ AI Workflow Mastery từ chúng tôi — có thể sử dụng để portfolio hay LinkedIn.',
   },
   {
-    q: 'Náº¿u khÃ´ng hÃ i lÃ²ng, tÃ´i cÃ³ Ä‘Æ°á»£c hoÃ n tiá»n khÃ´ng?',
-    a: 'CÃ³! ChÃºng tÃ´i cam káº¿t hoÃ n tiá»n 100% trong vÃ²ng 7 ngÃ y náº¿u báº¡n khÃ´ng hÃ i lÃ²ng vá»›i sáº£n pháº©m, khÃ´ng cáº§n giáº£i thÃ­ch lÃ½ do. ChÃºng tÃ´i tá»± tin vÃ o cháº¥t lÆ°á»£ng sáº£n pháº©m.',
+    q: 'Chính sách hoàn tiền như thế nào?',
+    a: 'Chúng tôi cam kết hoàn tiền 100% trong 30 ngày đầu nếu bạn không hài lòng với nội dung. Không cần giải thích, không câu hỏi. Chúng tôi tin vào chất lượng sản phẩm của mình.',
   },
   {
-    q: 'TÃ´i cÃ³ thá»ƒ dÃ¹ng thá»­ miá»…n phÃ­ khÃ´ng?',
-    a: 'CÃ³! ÄÄƒng kÃ½ Demo miá»…n phÃ­ Ä‘á»ƒ tráº£i nghiá»‡m há»‡ thá»‘ng trong 7 ngÃ y vá»›i Ä‘áº§y Ä‘á»§ tÃ­nh nÄƒng cá»§a gÃ³i Pro. KhÃ´ng cáº§n tháº» tÃ­n dá»¥ng. Sau Ä‘Ã³ má»›i quyáº¿t Ä‘á»‹nh cÃ³ nÃ¢ng cáº¥p hay khÃ´ng.',
+    q: 'Tôi có thể kiếm được bao nhiêu sau khi học?',
+    a: 'Thu nhập phụ thuộc vào nỗ lực và cách bạn áp dụng. Nhiều học viên kiếm 15-50 triệu/tháng sau 2-3 tháng. Có học viên đã scale lên 100+ triệu/tháng với agency model. Kết quả thực tế có thể khác nhau.',
+  },
+  {
+    q: 'Khóa học có được cập nhật không?',
+    a: 'Có! AI thay đổi rất nhanh nên chúng tôi cam kết cập nhật nội dung liên tục theo sự phát triển của công nghệ. Một lần mua là bạn được học mãi mãi với tất cả bản cập nhật trong tương lai.',
+  },
+  {
+    q: 'Làm thế nào để bắt đầu sau khi đăng ký?',
+    a: 'Sau khi thanh toán, bạn nhận email xác nhận và link truy cập trong vòng 15 phút. Từ đó bạn có thể vào học ngay lập tức. Chúng tôi cũng có onboarding session giúp bạn thiết lập mọi thứ trong 30 phút.',
   },
 ]
 
 export default function FAQ() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-  const [open, setOpen] = useState<number | null>(0)
+  const [visible, setVisible] = useState(false)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true) }, { threshold: 0.05 })
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
 
   return (
-    <section id="faq" className="py-24 lg:py-32 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="faq"
+      ref={ref}
+      className="relative py-24 overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #0A1022 0%, #0D1630 60%, #0A1022 100%)' }}
+    >
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(61,165,255,0.04) 0%, transparent 60%)' }}
+      />
+
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={visible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card-gold mb-6">
-            <HelpCircle className="w-4 h-4 text-gold" />
-            <span className="text-gold text-sm font-semibold">CÃ¢u Há»i ThÆ°á»ng Gáº·p</span>
+          <div className="section-label mx-auto mb-4">
+            <HelpCircle className="w-4 h-4" /> Câu Hỏi Thường Gặp
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 leading-tight">
-            Báº¡n Äang Tháº¯c Máº¯c <span className="gold-text">Äiá»u GÃ¬?</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+            Bạn Có Thắc Mắc?{' '}
+            <span className="hero-gradient-text">Chúng Tôi Giải Đáp</span>
           </h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Nhá»¯ng cÃ¢u há»i phá»• biáº¿n nháº¥t tá»« khÃ¡ch hÃ ng cá»§a chÃºng tÃ´i.
-          </p>
         </motion.div>
 
-        {/* FAQ Items */}
-        <div className="flex flex-col gap-3">
+        {/* FAQ items */}
+        <div className="space-y-3">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              className={`glass-card rounded-2xl overflow-hidden transition-all duration-300 ${
-                open === i ? 'border-gold/30' : 'border-white/5'
-              } border`}
+              animate={visible ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: i * 0.04 }}
+              className="glass-card rounded-[20px] overflow-hidden transition-all duration-300"
+              style={{ border: `1px solid ${openIndex === i ? 'rgba(61,165,255,0.35)' : 'rgba(36,68,122,0.5)'}` }}
             >
               <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 lg:p-6 text-left gap-4 hover:bg-white/2 transition-colors"
+                id={`faq-${i}`}
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="w-full flex items-center gap-4 p-5 sm:p-6 text-left group"
+                aria-expanded={openIndex === i}
               >
-                <div className="flex items-center gap-4">
-                  <span
-                    className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black"
-                    style={{
-                      background: open === i ? 'linear-gradient(135deg, #D4AF37, #E6C76A)' : 'rgba(255,255,255,0.06)',
-                      color: open === i ? '#1C2139' : 'rgba(255,255,255,0.5)',
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <span className={`font-semibold text-sm lg:text-base ${open === i ? 'text-white' : 'text-white/80'}`}>
-                    {faq.q}
-                  </span>
-                </div>
-                <ChevronDown
-                  className="w-5 h-5 flex-shrink-0 transition-transform duration-300 text-gold"
-                  style={{ transform: open === i ? 'rotate(180deg)' : 'rotate(0)' }}
-                />
+                <span className="text-xs font-extrabold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: openIndex === i ? 'rgba(61,165,255,0.2)' : 'rgba(255,255,255,0.05)', color: openIndex === i ? '#3DA5FF' : '#AAB4D6' }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className={`flex-1 text-sm sm:text-base font-semibold text-left ${openIndex === i ? 'text-white' : 'text-white/80'}`}>
+                  {faq.q}
+                </span>
+                <motion.div
+                  animate={{ rotate: openIndex === i ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-shrink-0"
+                >
+                  <ChevronDown className="w-5 h-5" style={{ color: openIndex === i ? '#3DA5FF' : '#AAB4D6' }} />
+                </motion.div>
               </button>
 
-              <div className={`accordion-content ${open === i ? 'open' : ''}`}>
-                <div className="px-5 lg:px-6 pb-5 pt-0">
-                  <div className="ml-11 pl-0">
-                    <p className="text-white/65 text-sm leading-relaxed">
-                      {faq.a}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <AnimatePresence>
+                {openIndex === i && (
+                  <motion.div
+                    key="faq-content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <div className="px-5 sm:px-6 pb-5 pt-1 border-t border-accent-blue/10">
+                      <p className="text-text-secondary text-sm sm:text-base leading-relaxed">{faq.a}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Still have questions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-10 text-center"
+          animate={visible ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.7 }}
+          className="text-center mt-12 glass-card-blue rounded-[20px] p-6"
         >
-          <p className="text-white/50 text-sm mb-4">Váº«n cÃ²n tháº¯c máº¯c?</p>
-          <button
-            onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass-card-gold text-gold font-semibold text-sm hover:shadow-gold transition-all hover:scale-105"
-          >
-            ðŸ’¬ Chat vá»›i tÆ° váº¥n viÃªn ngay
-          </button>
+          <p className="text-white font-semibold mb-2">Còn câu hỏi khác?</p>
+          <p className="text-text-secondary text-sm mb-4">Liên hệ trực tiếp với chúng tôi qua Zalo hoặc Facebook</p>
+          <div className="flex justify-center gap-3">
+            <a href="https://zalo.me/" target="_blank" rel="noopener noreferrer"
+              className="px-5 py-2 rounded-xl text-sm font-semibold text-accent-blue border border-accent-blue/30 hover:bg-accent-blue/10 transition-all">
+              Zalo Support
+            </a>
+            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer"
+              className="px-5 py-2 rounded-xl text-sm font-semibold text-accent-cyan border border-accent-cyan/30 hover:bg-accent-cyan/10 transition-all">
+              Facebook Group
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
